@@ -1,16 +1,21 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import { View, StyleSheet, SafeAreaView } from 'react-native';
 
-const HelloWorldApp = () => {
+import ContactList from './src/screens/ContactListScreen';
+
+function App() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-      <Text>Hello, world!</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <ContactList />
+    </SafeAreaView>
   );
-};
-export default HelloWorldApp;
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+});
+
+export default App;
