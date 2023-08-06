@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootStackNavigationProp, RootStackParamList } from '../navigation/AppStackNavigator';
@@ -63,6 +63,17 @@ const ContactInfoScreen: React.FC<Props> = ({ route }) => {
     }
   };
 
+  useLayoutEffect(() => {
+    // Update the headerRight with the handleSaveChanges function
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={handleSaveChanges}>
+          <Text style={styles.saveButton}>Save</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [editedContact, navigation]);
+
   // Render loading or display contact information if available
   if (!contactData || !editedContact) {
     return (
@@ -116,11 +127,7 @@ const ContactInfoScreen: React.FC<Props> = ({ route }) => {
           />
         </View>
       </View>
-      <View style={styles.divider} />
-      {/* Save button */}
-      <TouchableOpacity onPress={handleSaveChanges}>
-        <Text>Save Changes</Text>
-      </TouchableOpacity>
+      <View style={styles.divider} />      
     </View>
   );
 };
@@ -168,6 +175,11 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'lightgray',
     marginLeft: 16,
+  },
+  saveButton: {
+    color: '#FF8C00',
+    fontSize: 18,
+    marginRight: 16,
   },
 });
 
