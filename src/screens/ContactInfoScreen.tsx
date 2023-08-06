@@ -1,10 +1,19 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../navigation/AppStackNavigator';
 
-const ContactInfo: React.FC = () => {
+type ContactInfoScreenRouteProp = RouteProp<RootStackParamList, 'ContactInfo'>;
+
+type Props = {
+  route: ContactInfoScreenRouteProp;
+};
+
+const ContactInfoScreen: React.FC<Props> = ({ route }) => {
+  const { contactId } = route.params;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.toolbar} />
+    <View style={styles.container}>     
 
       <View style={styles.profilePicContainer} />
 
@@ -47,10 +56,7 @@ const ContactInfo: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  toolbar: {
-    height: 56,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: 'white',
   },
   profilePicContainer: {
     width: 150,
@@ -88,9 +94,9 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: 'darkgray',
+    backgroundColor: 'lightgray',
     marginLeft: 16,
   },
 });
 
-export default ContactInfo;
+export default ContactInfoScreen;

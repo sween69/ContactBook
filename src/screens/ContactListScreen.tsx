@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native'; 
+import { RootStackNavigationProp } from '../navigation/AppStackNavigator';
 import ContactItem from '../components/ContactItem';
 import contactData from '../data/contacts.json';
 
-const ContactList: React.FC = () => {
+const ContactListScreen: React.FC = () => {
+  const navigation = useNavigation<RootStackNavigationProp>(); // Get the navigation object
+
 
   useEffect(() => {
     // Check if the data exists in AsyncStorage
@@ -14,7 +18,6 @@ const ContactList: React.FC = () => {
         saveDataToStorage(contactData);
       }
     });
-
   }, []);
 
   const saveDataToStorage = async (data: any) => {
@@ -27,14 +30,20 @@ const ContactList: React.FC = () => {
     }
   };
 
+  // Function to handle contact item click
+  const handleContactItemClick = (contactId: string) => {
+    // Navigate to ContactInfo screen and pass the contact ID as a parameter
+    navigation.navigate('ContactInfo', { contactId });
+  };
+
   return (
     <ScrollView style={styles.container}>
       {contactData.map((contact) => (
-        <ContactItem
-          key={contact.id}
-          name={`${contact.firstName} ${contact.lastName}`} />
+        <TouchableOpacity key={contact.id} onPress={() => handleContactItemClick(contact.id)}>
+          <ContactItem name={`${contact.firstName} ${contact.lastName}`} />
+        </TouchableOpacity>
       ))}
-    </ScrollView >
+    </ScrollView>
   );
 };
 
@@ -45,4 +54,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ContactList;
+export default ContactListScreen;

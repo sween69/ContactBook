@@ -1,21 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import AppStackNavigator from './src/navigation/AppStackNavigator';
 
-import ContactList from './src/screens/ContactListScreen';
-
-function App() {
+const App = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <ContactList />
-    </SafeAreaView>
+    <NavigationContainer>
+      <AppStackNavigator />
+    </NavigationContainer>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-});
+};
 
 export default App;
