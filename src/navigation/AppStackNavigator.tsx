@@ -5,7 +5,7 @@ import ContactInfoScreen from '../screens/ContactInfoScreen';
 
 // Define the root stack param list
 export type RootStackParamList = {
-  ContactList: undefined;
+  ContactList: { updatedContact?: any }; // Add updatedContact parameter
   ContactInfo: { contactId: string }; // Add the contactId parameter
 };
 

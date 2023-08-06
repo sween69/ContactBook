@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/AppStackNavigator';
+import { RootStackNavigationProp, RootStackParamList } from '../navigation/AppStackNavigator';
+import { useNavigation, RouteProp } from '@react-navigation/native';
 import { Contact } from '../models/Contact'
 
 type ContactInfoScreenRouteProp = RouteProp<RootStackParamList, 'ContactInfo'>;
@@ -15,6 +15,8 @@ const ContactInfoScreen: React.FC<Props> = ({ route }) => {
   const { contactId } = route.params;
   const [contactData, setContactData] = useState<any | null>(null);
   const [editedContact, setEditedContact] = useState<any | null>(null);
+  const navigation = useNavigation<RootStackNavigationProp>();
+
 
   useEffect(() => {
     // Fetch the contact data from AsyncStorage based on contactId
@@ -50,6 +52,9 @@ const ContactInfoScreen: React.FC<Props> = ({ route }) => {
           await AsyncStorage.setItem('@contacts', JSON.stringify(contacts));
           // Update the contactData state to reflect the changes
           setContactData(editedContact);
+          // Pass the updated contact data back to ContactListScreen
+          navigation.navigate('ContactList', { updatedContact: editedContact });
+
           Alert.alert('Success', 'Contact information updated successfully!');
         }
       }

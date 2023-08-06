@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackNavigationProp } from '../navigation/AppStackNavigator';
+import { useNavigation, useRoute, RouteProp  } from '@react-navigation/native';
+import { RootStackNavigationProp, RootStackParamList } from '../navigation/AppStackNavigator';
 import ContactItem from '../components/ContactItem';
 import contactData from '../data/contacts.json';
 
+type ContactListScreenRouteProp = RouteProp<RootStackParamList, 'ContactList'>; 
+
+
 const ContactListScreen: React.FC = () => {
   const navigation = useNavigation<RootStackNavigationProp>(); // Get the navigation object
+  const route = useRoute<ContactListScreenRouteProp>(); 
+  const [contacts, setContacts] = useState<any[]>([]); 
 
   useEffect(() => {
     // Check if the data exists in AsyncStorage
@@ -15,14 +20,31 @@ const ContactListScreen: React.FC = () => {
       if (jsonValue === null) {
         // Data doesn't exist in AsyncStorage, so load it from contacts.json
         saveDataToStorage(contactData);
+      } else {
+        // Data exists in AsyncStorage, update the state with it
+        const contactsFromStorage = JSON.parse(jsonValue);
+        setContacts(contactsFromStorage); // Update the contacts state with the data from AsyncStorage
+        const updatedContact = route.params?.updatedContact;
+        if (updatedContact) {
+          // Find the index of the updated contact in the current state
+          const contactIndex = contacts.findIndex((c) => c.id === updatedContact.id);
+          if (contactIndex !== -1) {
+            // Update the contacts state with the updated contact
+            const updatedContacts = [...contacts];
+            updatedContacts[contactIndex] = updatedContact;
+            setContacts(updatedContacts);
+          }
+        }
       }
     });
-  }, []);
+  }, [route.params?.updatedContact]); 
 
   const saveDataToStorage = async (data: any) => {
     try {
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem('@contacts', jsonValue);
+      const contactsFromStorage = JSON.parse(jsonValue);
+      setContacts(contactsFromStorage); // Update the contacts state with the data from AsyncStorage
       // Data saved successfully
     } catch (e) {
       // Error saving data
@@ -37,7 +59,7 @@ const ContactListScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {contactData.map((contact) => (
+      {contacts.map((contact) => (
         <TouchableOpacity key={contact.id} onPress={() => handleContactItemClick(contact.id)}>
           <ContactItem name={`${contact.firstName} ${contact.lastName}`} />
         </TouchableOpacity>
