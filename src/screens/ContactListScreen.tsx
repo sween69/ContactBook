@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigationProp } from '../navigation/AppStackNavigator';
 import ContactItem from '../components/ContactItem';
 import contactData from '../data/contacts.json';
 
 const ContactListScreen: React.FC = () => {
   const navigation = useNavigation<RootStackNavigationProp>(); // Get the navigation object
-
 
   useEffect(() => {
     // Check if the data exists in AsyncStorage
